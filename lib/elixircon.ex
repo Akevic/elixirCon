@@ -21,9 +21,13 @@ defmodule Elixircon do
 
   def build_grid(image) do
     %Elixircon.Image{hex: hex} = image
-    hex
+    grid = hex
     |> Enum.chunk_every(4)
     |> Enum.map(&mirror_row/1)
+    |> List.flatten
+    |> Enum.with_index
+
+    %Elixircon.Image{image | grid: grid}
   end
 
   def mirror_row(row) do
