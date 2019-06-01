@@ -22,12 +22,12 @@ defmodule Elixircon do
   def build_grid(image) do
     %Elixircon.Image{hex: hex} = image
     hex
-    |> Enum.chunk_every(3)
-    |> mirror_row
+    |> Enum.chunk_every(4)
+    |> Enum.map(&mirror_row/1)
   end
 
   def mirror_row(row) do
-    [first, second | _tail] = row
-    row ++ [second, first]
+    [first, second, third | _tail] = row
+    row ++ [third, second, first]
   end
 end
