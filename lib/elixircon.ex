@@ -4,6 +4,8 @@ defmodule Elixircon do
     |> hash_input
     |> pick_color
     |> build_grid
+    |> filter_odd
+    |> build_pixel_map
   end
 
   def hash_input(input) do
@@ -33,5 +35,29 @@ defmodule Elixircon do
   def mirror_row(row) do
     [first, second, third | _tail] = row
     row ++ [third, second, first]
+  end
+
+  def filter_odd(image) do
+    %Elixircon.Image{grid: grid} = image
+    grid = Enum.filter grid, fn({code, _index}) ->
+      rem(code, 2) == 0
+    end
+
+    %Elixircon.Image{image | grid: grid}
+  end
+
+  def build_pixel_map(image) do
+    %Elixircon.Image{grid: grid} = image
+    pixel_map = Enum.map grid, fn({_code, index}) ->
+      horizontal = rem(index, 5) * 50
+      vertical = div(index, 5) * 50
+
+      top_left = {horizontal, vertical}
+      bottom_right = {horizontal + 50, vertical + 50}
+
+      {top_left, bottom_right}
+    end
+
+    %Elixircon.Image{image | pixel_map: pixel_map}
   end
 end
