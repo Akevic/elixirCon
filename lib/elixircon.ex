@@ -6,6 +6,8 @@ defmodule Elixircon do
     |> build_grid
     |> filter_odd
     |> build_pixel_map
+    |> draw_image
+    |> save_image(input)
   end
 
   def hash_input(input) do
@@ -59,5 +61,20 @@ defmodule Elixircon do
     end
 
     %Elixircon.Image{image | pixel_map: pixel_map}
+  end
+
+  def draw_image(%Elixircon.Image{color: color, pixel_map: pixel_map}) do
+    image = :egd.create(250, 250)
+    fill = :egd.color(color)
+
+    Enum.each pixel_map, fn({start, stop}) ->
+      :egd.filledRectangle(image, start, stop, fill)
+    end
+
+    :egd.render(image)
+  end
+
+  def save_image(image, input) do
+    File.write("#{input}.png", image)
   end
 end
